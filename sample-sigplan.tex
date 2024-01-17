@@ -154,18 +154,20 @@ Cyberkriminalität ist in der Modernen Gesellschaft nicht mehr wegzudenken. Insb
 Zuerst wird erklärt was ein Internet Exchange Point (IXP) ist und wo er sich im Internet befindet. Danach erfolgt eine Einführung in den IXP Scrubber. Wie er funktioniert und wie er schafft schädlichen Internetverkehr zu filtern.
 
 \subsection{Internet Exchange Point}
-Das Internet bestehe aus einer Vielzahl von miteinander verbundenen Netzwerken. Um diese Netzwerke effizient zu verknüpfen, werden sogenannte Internet Exchange Points (IXPs) am Rand der Netzwerke platziert \cite{Cloudflare01}. Diese IXPs fungieren als zentrale Knotenpunkte im Internet und ermöglichen es, den Internetverkehr von einem Netzwerk auf ein anderes zu leiten. Praktisch betrachtet handelt es sich bei IXPs um Schaltstellen, die als Bindeglieder zwischen verschiedenen Netzwerken dienen.
+Das Internet bestehe aus einer Vielzahl von miteinander verbundenen Netzwerken. Um diese Netzwerke effizient zu verknüpfen, werden sogenannte Internet Exchange Points (IXPs) am Rand der Netzwerke platziert. Diese IXPs fungieren als zentrale Knotenpunkte im Internet und ermöglichen es, den Internetverkehr von einem Netzwerk auf ein anderes zu leiten. Praktisch betrachtet handelt es sich bei IXPs um Schaltstellen, die als Bindeglieder zwischen verschiedenen Netzwerken dienen. Daraus folge, dass durch einen IXP sehr viel Internetverkehr durch laufen würde.
 
 Die Funktionsweise der IXPs kann mit der eines Internet-Switches verglichen werden, wobei sie auf der zweiten Ebene des OSI-Modells positioniert sind. Zur Kommunikation mit einem IXP verwenden Netzwerke das sogenannte Backbone-Protokoll.
 
 Ein wesentlicher Vorteil von IXPs liegt in der geringen Latenz und der kurzen Roundtrip-Zeit. Darüber hinaus ermöglichen sie es, den Verkehr im Falle eines Ausfalls auf alternative Routen umzuleiten, was die Robustheit des Netzwerks erhöht. Dies trägt dazu bei, dass das Netzwerk weniger anfällig für Fehler und Störungen ist. \cite{Cloudflare01}
 
-\subsection{Scrubber}
-\cite{Hohlfeld01}
+\subsection{IXP Scrubber}
+Der IXP Scrubber im folgenden nur noch Scrubber genannt werde in einem, wie es bereits im Namen steht, IXP installiert. Dort sei es die Aufgabe vom Scrubber den bösartigen Internetverkehr zu erkennen und raus zu filtern. Der Scrubber basiere auf einem Machine Learning System (ML). Die Motivation hinter diesem Scrubber sei es Distributed Denial of Service (DDoS) Attacken abzuwehren. DDoS Attacken seien hoch frequentiert und können bis zu 3.5 Tbit/s groß sein. Außerdem sei es einfach diesen Angriff auszuführen.
 
+Der Grundsatz des Scrubbers sei es kontrollierbar und lokal verständlich zu sein. Zudem solle er perfomant sein und eine kleine Fehlerrate haben. 
+\cite{Hohlfeld01}
 %%
 %% The next two lines define the bibliography style to be used, and
-%% the bibliography file.
+%% the bibliography file.https://de.overleaf.com/project/65760e8888e47700886539c8
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{sample-base}
 
@@ -188,3 +190,4 @@ TBD
 \endinput
 %%
 %% End of file `sample-sigplan.tex'.
+
