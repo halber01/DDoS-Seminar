@@ -161,9 +161,11 @@ Die Funktionsweise der IXPs kann mit der eines Internet-Switches verglichen werd
 Ein wesentlicher Vorteil von IXPs liegt in der geringen Latenz und der kurzen Roundtrip-Zeit. Darüber hinaus ermöglichen sie es, den Verkehr im Falle eines Ausfalls auf alternative Routen umzuleiten, was die Robustheit des Netzwerks erhöht. Dies trägt dazu bei, dass das Netzwerk weniger anfällig für Fehler und Störungen ist. \cite{Cloudflare01}
 
 \subsection{IXP Scrubber}
-Der IXP Scrubber im folgenden nur noch Scrubber genannt werde in einem, wie es bereits im Namen steht, IXP installiert. Dort sei es die Aufgabe vom Scrubber den bösartigen Internetverkehr zu erkennen und raus zu filtern. Der Scrubber basiere auf einem Machine Learning System (ML). Die Motivation hinter diesem Scrubber sei es Distributed Denial of Service (DDoS) Attacken abzuwehren. DDoS Attacken seien hoch frequentiert und können bis zu 3.5 Tbit/s groß sein. Außerdem sei es einfach diesen Angriff auszuführen.
+Der IXP Scrubber, im folgenden nur noch Scrubber genannt, werde in einem, wie es bereits im Namen steht, IXP eingesetzt. Dort sei es die Aufgabe vom Scrubber den bösartigen Internetverkehr zu erkennen und raus zu filtern. Der Scrubber basiere auf einem Machine Learning System (MLS). Die Motivation hinter diesem Scrubber sei es Distributed Denial of Service (DDoS) Attacken abzuwehren. DDoS Attacken seien einfach auszuführen, weil es Unternehmen gebe, bei den Internetverkehr billig zu kaufen gebe. Dadurch sei dieser Angriffsvektor hoch freuqentiert und ihr Volumen könne bis zu 3.5 Tbit/s groß werden.
 
-Der Grundsatz des Scrubbers sei es kontrollierbar und lokal verständlich zu sein. Zudem solle er perfomant sein und eine kleine Fehlerrate haben. 
+Das MLS bestehe aus zwei Schritten. Der erste Schritt sei es das System zu Trainieren. Für diesen Schritt wurde über zwei Jahre lang Internetverkehr bei fünf verschiedenen IXPs in Euorpa und USA gesammelt. 
+
+Der Grundsatz des Scrubbers sei es eine sehr hohe Genauigkeit zu haben und dabei Übersichtlich zu bleiben.
 \cite{Hohlfeld01}
 %%
 %% The next two lines define the bibliography style to be used, and
