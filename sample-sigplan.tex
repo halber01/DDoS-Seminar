@@ -150,41 +150,44 @@
 \section{Introduction}
 Cyberkriminalität ist in der Modernen Gesellschaft nicht mehr wegzudenken. Insbesondere die DDoS Attacken gegen Unternehmen und staatliche Institutionen haben in den letzten Jahren dramatisch zugenommen.
 
-\newpage
 \section{IXP Scrubber}
 Zuerst wird erklärt was ein Internet Exchange Point (IXP) ist und wo er sich im Internet befindet. Danach erfolgt eine Einführung in den IXP Scrubber. Wie er funktioniert und wie er schafft schädlichen Internetverkehr zu filtern.
 
 \subsection{Internet Exchange Point}
 Das Internet bestehe aus einer Vielzahl von miteinander verbundenen Netzwerken. Um diese Netzwerke effizient zu verknüpfen, werden sogenannte Internet Exchange Points (IXPs) am Rand der dieser platziert. Die IXPs fungieren als zentrale Knotenpunkte im Internet und ermöglichen es, den Internetverkehr von einem Netzwerk auf ein anderes zu leiten. Praktisch betrachtet handelt es sich bei IXPs um Schaltstellen, die als Bindeglieder zwischen verschiedenen Netzwerken dienen. Daraus folge, dass durch einen IXP sehr viel Internetverkehr durch laufen würde.
 
-Die Funktionsweise eines IXPs kann mit der eines Internet-Switches verglichen werden, wobei sie auf der zweiten Ebene des OSI-Modells positioniert sind. Zur Kommunikation mit einem IXP verwenden Netzwerke das sogenannte Backbone-Protokoll.
+Die Funktionsweise eines IXPs kann mit der eines Internet-Switches verglichen werden, wobei sie auf der zweiten Ebene des OSI-Modells positioniert sei. Zur Kommunikation mit einem IXP verwenden Netzwerke das sogenannte Backbone-Protokoll.
 
 Ein wesentlicher Vorteil von einem IXP liegt in der geringen Latenz und der kurzen Roundtrip-Zeit. Darüber hinaus ermöglichen sie es, den Verkehr im Falle eines Ausfalls auf alternative Routen umzuleiten, was die Robustheit des Netzwerks erhöhe. Dies träge dazu bei, dass das Netzwerk weniger anfällig für Fehler und Störungen sei. \cite{ixp00}
 
 \subsection{IXP Scrubber}
-Der IXP Scrubber, im folgenden nur noch Scrubber genannt, werde in einem, wie es bereits im Namen steht, IXP eingesetzt. Dort sei es die Aufgabe vom Scrubber den bösartigen Internetverkehr zu erkennen und raus zu filtern. Der Scrubber basiere auf einem Machine Learning System (MLS). Die Motivation hinter diesem Scrubber sei es Distributed Denial of Service (DDoS) Attacken abzuwehren. DDoS Attacken seien einfach auszuführen, weil es Unternehmen gebe, bei denen Internetverkehr billig zu kaufen gebe. Dadurch sei dieser Angriffsvektor hoch freuqentiert und ihr Volumen könne bis zu 3.5 Tbit/s groß werden. Dieses MLS bestehe aus zwei Schritten. Einmal das System zu trainieren und im Anschluss die Daten zu klassifizieren.
+Der IXP Scrubber, im Folgenden als "Scrubber" bezeichnet, werde innerhalb eines Internet Exchange Points (IXP) eingesetzt. Seine Hauptaufgabe sei es, bösartigen Internetverkehr zu erkennen und herauszufiltern. Der Scrubber basiere auf einem Machine Learning System (MLS). Die primäre Motivation hinter diesem Scrubber wäre die Abwehr von Distributed Denial of Service (DDoS) Attacken. DDoS Attacken seien besonders problematisch, da es Unternehmen gebe, bei denen der Kauf von Internetverkehr kostengünstig sei. Dies führe dazu, dass dieser Angriffsvektor häufig genutzt werde und das Volumen solcher Angriffe könne bis zu 3,5 Tbit/s erreichen.
 
-\subsubsection{Training}
-Ein MLS benötige viele Trainingsdaten um verlässlich zu funktionieren. Aufgrund dessen wurde das MLS mit Daten, die bis zu zwei Jahre lang alt sein konnten von fünf Partner IXPs in Europa und USA versorgt. Die erhaltenen Daten waren einmal in gutem und schlechtem Verkehr unterteilt. Internetverkehr der automatisch vom System oder von benachbarten IXPs händisch als schlecht gekennzeichnet wurde, erhielten den Tag blackholed. Verkehr mit diesem Label wurden in ein "Schwarzesloch" geleitet und somit verschwindeten sie und das Ziel wurde nicht belastet. Mit Hilfe des Border Gateway Protocol (BGP) können die Labels an andere IXPs weitergegebn werden \cite{blackhole00}. Die Daten, die nicht dieses Label erhielten, wurden als gutartig eingestuft. Die Trainingsmenge wurde mit ungefähr dem gleichen Prozentsatz aus gutem und bösartigem zusammengesetzt.
+Das MLS des Scrubbers bestünde aus zwei Hauptschritten. Zunächst erfolge das Training des Systems, gefolgt von der eigentlichen Klassifizierung der Daten. Der Grundgedanke des Scrubbers wäre es, präzise zu arbeiten und gleichzeitig die Übersichtlichkeit zu wahren. Im Anschluss werde der Scrubber evaluiert.
 
-Auf den Trainingsdaten wurde der Association Rule Mining (ARM) Algorithmus ausgeführt. 
+\subsubsection{Microscopic Level}
+Um zuverlässig zu funktionieren, brauche das Machine Learning System (MLS) viele Trainingsdaten. Aus diesem Grund werden dem MLS von fünf Partner Internet Exchange Points (IXPs) in Europa und den USA Daten zur Verfügung gestellt, die bis zu zwei Jahre alt sein konnten. Diese Daten werden in gutartigen und bösartigen Verkehr unterteilt. Der Internetverkehr, der automatisch vom System oder von benachbarten IXPs manuell als schädlich gekennzeichnet werde, erhielt das Label "blackholed". Verkehr mit diesem Label werde in ein "Schwarzes Loch" geleitet, was dazu führte, dass sie verschwanden und das Ziel nicht beeinträchtigt werde. Durch die Verwendung des Border Gateway Protocol (BGP) könnem diese Labels an andere IXPs weitergegeben werden \cite{blackhole00}. 
+Daten, die dieses Label nicht erhalten haben, werdeb als gutartig eingestuft. Die Trainingsmenge werde mit ungefähr dem gleichen Prozentsatz aus gutartigem und bösartigem Verkehr zusammengesetzt.
 
-Self Attack Set (SAS
-
-Validieren der Testdaten
-
-
-\subsubsection{Klassifikation}
-
-TBW
+Auf den Trainingsdaten werde der Association Rule Mining (ARM) Algorithmus angewendet. ARM ist ein bekanntes Data-Mining-Verfahren, das Association-Regeln anhand der Daten in der Form A -> C lernt. Die Anwendung des Verfahrens auf den Testdaten haben 7859 Regeln ergeben. Anschließend werden alle Regeln eliminiert, die keinen Mehrwert hatten, weil sie eine zu geringe Konfidenz aufwiesen. Nach dieser Minimierung blieben 367 Regeln übrig. Diese Anzahl war gering genug, um es zu ermöglichen, die Regeln manuell zu überprüfen. In einem User Interface (UI) werden die Regeln angezeigt und Administratoren können zu den Regeln Kommentare hinzufügen sowie diese akzeptieren oder ablehnen.
+Die zuvor gewonnen Regeln werden im nächsten Schritt unabhängig überprüft, damit überprüft werden kann, dass dsie keine Voreingenommenheit aufweisen und akkurat seien.  Hierfür werde eine neue Testmenge erstellt, die als "Self Attack Set" (SAS) bzeichnet werde. Das wichtige bei den Testdaten sei es zu wissen, ob sie wahr oder falsch seien. Um dies zu garantieren, werden DDoS Attacken bei einem Unternehmen, wie Anfangs beschrieben, gekauft und ausgeführt auf einem speziell ausgelegtem und abgegrenztem Internetbereich. Zusätzlich werde gutartiger Internetverkehr ebenfalls simuliert und der SAS hinzugefügt.
 
 
+In einem zusätzlichen Experiment, werde der ARM Algorithmus auf dem SAS ausgeführt. Die gewonnen Regeln werden von fünf Experten ausgewertet. 3Nach der Überprüfung bleiben 38 Regeln übrig. Im Anschluss werde gemessen, wie lange die Regeln benötigt haben und wie effektiv sie waren. ie Regeln weisen eine kurze Laufzeit auf und zeigen dabei eine hohe Effizienz. Es werde unter einem Prozent guter Verkehr als böser Verkehr gekennzeichnet und 75 Prozent des DDoS Verkehr erfolgreich erkannt. Die Ergebnisse zeigen, dass der Ansatz eine gute Durchfürbarkeit besitze.
+
+\subsubsection{Microscopic Level}
+Das Ziel des zweiten Schrittes sei es korrekt zu identifizieren, ob ein Ziel angegriffen werde oder nicht. Zusätzliche solle gelten, dass die Identifizierung ortsunabhängig sei und übersichtlich bleibe. Um dieses Ziel zu erreichen werden Kategorien gewichtet. Die Gewichtung finde vor der Klassifikation in der Vorverarbeitung statt. Kategorien, die häufig in blackhole Labels auftreten, erhalten eine positive Gewichtung, während Kategorien, die nicht in blackhole Labels auftreten, eine negative Gewichtung erhalten. Mögliche Kategorien können IPs, Transportports, MAC-Adressen und weitere seien. Zudem werden die Daten normalisiert.
+
+Die Klassifikation werde mit fünf verschiedenen Klassifikatoren durchgeführt, somit am Ende der performanteste ausgewählt. Die Daten hierfür werden erneut in eine Trainingsmenge und Testmenge unterteilt, wobei gelte, dass die zwei Mengen disjunkt seien. Die Klassifikatoren sollen bestmöglich performen. Um dieses zu erreichen, werden die Daten, wie im letzten Absatz erläutert, in die Vorverarbeitung geschickt. Zusätzlich werden Hyperparameter optimiert. Die Hyperparameter werden in jedem Schritt überprüft und angepasst, wobei die 3-fold-cross-validation auf allen Daten verwendet werde. Das bedeute, dass die Daten in drei Mengen aufgeteilt werden. Für jede Kombination werden zwei Mengen als Trainingsdaten verwendet und die verbleibende Menge für Testdaten. Als letzte Optimierung werden Korrelationen betrachtet.
+
+\subsubsection{Evaluation}
 
 
 
 
 
-Der Grundsatz des Scrubbers sei es eine sehr hohe Genauigkeit zu haben und dabei Übersichtlich zu bleiben.
+
+
 \cite{Hohlfeld01}
 %%
 %% The next two lines define the bibliography style to be used, and
