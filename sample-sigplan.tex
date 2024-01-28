@@ -182,13 +182,33 @@ Die Klassifikation sei mit fünf verschiedenen Klassifikatoren durchgeführt, so
 
 \subsubsection{Evaluation}
 
-
-
-
-
-
+Der Srubber sei mit allen 
 
 \cite{Hohlfeld01}
+
+\section{Source Address Validation}
+IP Spoofing, das Versenden von Internetpaketen unter Vortäuschung einer falschen Absenderadresse, stellt ein erhebliches Problem für das Internet dar. Das Fehlen einer Authentifizierung beim Senden von Internetpaketen hat zur Folge, dass es schwierig ist zu identifizieren, ob der angegebene Absender des Pakets wirklich authentisch ist oder ob sich dahinter jemand anderes verbirgt. Die dadurch gewonnene Anonymität wird gezielt ausgenutzt, um verschiedene Arten von Angriffen durchzuführen, darunter insbesondere DDoS Angriffe \cite{Kor01, Gorilla01}. 
+
+Die Notwendigkeit von Authentifizierungsmethoden und Schutzmechanismen gegen IP Spoofing wird immer deutlicher, um die Integrität und Sicherheit des Internets zu gewährleisten. Unternehmen und Organisationen müssen fortlaufend daran arbeiten, effektive Maßnahmen zu implementieren, um sich vor den potenziell verheerenden Auswirkungen von IP Spoofing und den damit verbundenen Angriffen zu schützen.
+
+\subsection{IP Spoofing}
+IP Spoofing ist im Kern eine Täuschungstechnik, bei der der Empfänger eines Datenpakets fälschlicherweise glaubt, dass es von einem bestimmten Absender stammt, während es tatsächlich von einem anderen gesendet wurde. Dieser trickreiche Vorgang hat weitreichende Auswirkungen auf die Sicherheit im Netzwerkumfeld und ermöglicht es Angreifern, ihre wahre Identität zu verschleiern.
+
+Technisch betrachtet manipuliert der Angreifer bei IP Spoofing seine IP-Adresse, um sie als die eines anderen Hosts erscheinen zu lassen. Dieser Prozess birgt erhebliche Sicherheitsrisiken, da er es dem Angreifer ermöglicht, sich Zugang zu einem Netzwerk zu verschaffen, ohne entdeckt zu werden. Die fehlende Authentifizierung bei der Übermittlung von Datenpaketen trägt dazu bei, dass der Empfänger diese gefälschten Absenderinformationen nicht zuverlässig überprüfen kann \cite{Beverly01}.
+
+
+\subsection{Validation}
+Bei der Source Address Validation (SAV) ist eine Sicherheitsmaßnahme, die darauf abzielt, IP-Spoofing zu verhindern. Sie besteht darin, dass Netzwerkgeräte wie Router,Firewalls und IXPs überprüfen, ob die Absender IP-Adresse eines eingehenden Datenpakets einer gültigen und erwarteten Adresse entspricht. Das Ziel von SAV ist es sicherzustellen, dass Datenpakete tatsächlich von dem Absender stammt, die er vorgibt zu repräsentieren.
+
+BCP 38 \cite{Ingress01} liefert die erste Möglichkeit um IP-Spoofing zu unterbinden. Um die Mögliechkeit zu implementieren bietet sich die Installation eines sogenannten Ingress-Filters als Maßnahme an. Dieser Filter wird entweder in einem Router oder einer Firewall implementiert. Eine grundlegende Voraussetzung hierfür ist, dass das Netzwerkgerät sämtliche externen Netze kennt, die es mit dem Zentrum verbindet. Das Hauptziel besteht darin, den Internetverkehr zu unterbinden, bevor er das globale Internet erreicht.
+Der Ingress-Filter erreicht dieses Ziel, indem er ausschließlich den Verkehr akzeptiert und passieren lässt, der über eine gültige Absenderadresse verfügt. Hierbei ist es entscheidend, dass die Absenderadresse mit den dem Router bekannten IP-Adressen übereinstimmt. Andernfalls wird der Verkehr blockiert und nicht weitergeleitet.
+Diese Sicherheitsmaßnahme agiert als eine Früherkennung, um gefälschten Datenverkehr bereits im Ansatz zu eliminieren. Durch die gezielte Überprüfung der Absenderadresse trägt der Ingress-Filter dazu bei, unerwünschten IP-Spoofing-Angriffen effizient entgegenzuwirken und somit die Integrität des Netzwerks zu gewährleisten.
+
+
+
+\subsection{Aktueller Stand}
+
+\subsection{Zukunft von SAV}
 %%
 %% The next two lines define the bibliography style to be used, and
 %% the bibliography file.https://de.overleaf.com/project/65760e8888e47700886539c8
