@@ -32,6 +32,7 @@
 %TC:envir math 0 word
 %TC:envir comment 0 0
 %%
+
 %%
 %% The first command in your LaTeX source must be the \documentclass command.
 \documentclass[sigplan,screen]{acmart}
@@ -60,9 +61,7 @@
 %% the commands and values with those provided to you when you
 %% complete the rights form.
 \setcopyright{acmlicensed}
-\copyrightyear{2018}
-\acmYear{2018}
-\acmDOI{XXXXXXX.XXXXXXX}
+\copyrightyear{2024}
 
 %
 %  Uncomment \acmBooktitle if th title of the proceedings is different
@@ -70,7 +69,6 @@
 %
 %\acmBooktitle{Woodstock '18: ACM Symposium on Neural Gaze Detection,
 %  June 03--05, 2018, Woodstock, NY} 
-\acmISBN{978-1-4503-XXXX-X/18/06}
 
 
 %%
@@ -194,19 +192,35 @@ Die Notwendigkeit von Authentifizierungsmethoden und Schutzmechanismen gegen IP 
 \subsection{IP Spoofing}
 IP Spoofing ist im Kern eine Täuschungstechnik, bei der der Empfänger eines Datenpakets fälschlicherweise glaubt, dass es von einem bestimmten Absender stammt, während es tatsächlich von einem anderen gesendet wurde. Dieser trickreiche Vorgang hat weitreichende Auswirkungen auf die Sicherheit im Netzwerkumfeld und ermöglicht es Angreifern, ihre wahre Identität zu verschleiern.
 
-Technisch betrachtet manipuliert der Angreifer bei IP Spoofing seine IP-Adresse, um sie als die eines anderen Hosts erscheinen zu lassen. Dieser Prozess birgt erhebliche Sicherheitsrisiken, da er es dem Angreifer ermöglicht, sich Zugang zu einem Netzwerk zu verschaffen, ohne entdeckt zu werden. Die fehlende Authentifizierung bei der Übermittlung von Datenpaketen trägt dazu bei, dass der Empfänger diese gefälschten Absenderinformationen nicht zuverlässig überprüfen kann \cite{Beverly01}.
+Technisch betrachtet manipuliert der Angreifer bei IP Spoofing seine IP-Adresse, um sie als die eines anderen Hosts erscheinen zu lassen. Dieser Prozess birgt erhebliche Sicherheitsrisiken, da er es dem Angreifer ermöglicht, verschiedene Angriffe auf ein Ziel auszuüben. Die fehlende Authentifizierung bei der Übermittlung von Datenpaketen trägt dazu bei, dass der Empfänger diese gefälschten Absenderinformationen nicht zuverlässig überprüfen kann \cite{Beverly01}.
 
+Diese Täuschungstechnik besteht bereits seit mehr als 25 Jahren und hat sich in dieser Zeit als beliebt für Anonymität und verschiedene DDoS-Angriffsvektoren wie Redirection und Amplification etabliert \cite{manrs01}.
 
 \subsection{Validation}
-Bei der Source Address Validation (SAV) ist eine Sicherheitsmaßnahme, die darauf abzielt, IP-Spoofing zu verhindern. Sie besteht darin, dass Netzwerkgeräte wie Router,Firewalls und IXPs überprüfen, ob die Absender IP-Adresse eines eingehenden Datenpakets einer gültigen und erwarteten Adresse entspricht. Das Ziel von SAV ist es sicherzustellen, dass Datenpakete tatsächlich von dem Absender stammt, die er vorgibt zu repräsentieren.
+Source Address Validation (SAV) fungiert als Schutzmaßnahme gegen IP-Spoofing. Die Hauptabsicht von SAV besteht darin, die Echtheit der Absenderadresse eines Datenpakets zu überprüfen. In der aktuellen Internetarchitektur fehlt eine Authentifizierungsoption beim Senden von Datenpaketen. Diese Sicherheitslücke ermöglicht IP-Spoofing, was wiederum zu einer Zunahme von DDoS-Angriffen führt \cite{Hal01}.
 
-BCP 38 \cite{Ingress01} liefert die erste Möglichkeit um IP-Spoofing zu unterbinden. Um die Mögliechkeit zu implementieren bietet sich die Installation eines sogenannten Ingress-Filters als Maßnahme an. Dieser Filter wird entweder in einem Router oder einer Firewall implementiert. Eine grundlegende Voraussetzung hierfür ist, dass das Netzwerkgerät sämtliche externen Netze kennt, die es mit dem Zentrum verbindet. Das Hauptziel besteht darin, den Internetverkehr zu unterbinden, bevor er das globale Internet erreicht.
-Der Ingress-Filter erreicht dieses Ziel, indem er ausschließlich den Verkehr akzeptiert und passieren lässt, der über eine gültige Absenderadresse verfügt. Hierbei ist es entscheidend, dass die Absenderadresse mit den dem Router bekannten IP-Adressen übereinstimmt. Andernfalls wird der Verkehr blockiert und nicht weitergeleitet.
-Diese Sicherheitsmaßnahme agiert als eine Früherkennung, um gefälschten Datenverkehr bereits im Ansatz zu eliminieren. Durch die gezielte Überprüfung der Absenderadresse trägt der Ingress-Filter dazu bei, unerwünschten IP-Spoofing-Angriffen effizient entgegenzuwirken und somit die Integrität des Netzwerks zu gewährleisten.
+\subsubsection{oSAV und iSAV: Schlüsselrolle in der Netzwerksicherheit}
+Je nachdem, in welche Richtung des Internetflusses der SAV eingesetzt wird, erfüllt er unterschiedliche Funktionen und Ziele. Outbound SAV (oSAV) prüft die Echtheit der Absenderadressen, wenn Datenpakete das interne Netzwerk verlassen, während Inbound SAV (iSAV) die Absenderadressenüberprüfung für eingehende Datenpakete aus dem externen Netzwerk durchführt. Diese Unterscheidung ist entscheidend für die Implementierung von Sicherheitsmaßnahmen und die Reduzierung von Angriffsvektoren in beide Richtungen des Datenverkehrs \cite{Hal01}.
 
+Die Nichtumsetzung von oSAV erleichtert Angreifern insbesondere die Durchführung von DDoS-Angriffen, insbesondere Reflection-Angriffen über das offene Domain Name System (DNS) oder das Network Time Protocol (NTP). Bei diesen Angriffen nutzen Angreifer öffentliche Server, um Schaden anzurichten, indem sie manipulierte IP-Adressen verwenden, um Anfragen zu senden und den Empfänger mit übermäßigen Antworten zu überlasten. Zudem erhält der „Absender“ ebenfalls Antworten aufgrund des Transmission Control Protocol (TCP) Handshake. Darüber hinaus bleibt der Angreifer aufgrund der fehlenden Identifikation unerkannt \cite{manrs01} \cite{Hal01} \cite{Ingress01}. Bei fehlendem iSAV zusammen mit neuen Attacken wie Water Torture Attack (Lou et al \cite{Lou01}) könnte zu erheblichen Konsequenzen führen.
 
+\textbf{//TODO Figure oSAV und iSAV}
 
-\subsection{Aktueller Stand}
+\subsubsection{Ingress Filter}
+In den 1990er Jahren wurden die ersten DDoS-Angriffe öffentlich bekannt, die auf IP-Spoofing basierten \cite{CRP01}. Die daraus resultierende Unsicherheit und die Befürchtung, wenig dagegen unternehmen zu können, führten dazu, dass Fergusan et al. (BCP 38) \cite{Ingress01} im Jahr 2000 den sogenannten "Ingress Filter" vorstellten. Dieser sollte dazu dienen, die Auswirkungen von IP-Spoofing und den daraus resultierenden DDoS-Angriffen zu minimieren. Dieser Filter setzt voraus, dass eine Liste aller gültigen IP-Prefixe vorhanden ist. Seine Funktionsweise besteht darin, IP-Spoofing-Angriffe zu unterbinden, indem er nur den Datenverkehr passieren lässt, dessen IP-Prefix in seiner Liste aufgeführt ist. Falls der Prefix nicht aufgeführt ist, wird der Datenverkehr blockiert. Um einen erfolgreichen Angriff zu starten, muss ein Angreifer eine gültige IP-Adresse aus seinem regionalen Bereich übernehmen, um den Filter zu umgehen.
+
+Ein Nachteil dieses Ansatzes besteht darin, dass die IP-Adresse möglicherweise von einem Internetdienstanbieter (ISP) blockiert wird. Dies könnte dazu führen, dass der legitime Sender Schaden erleidet, obwohl er nichts mit dem Angriff zu tun hat. Andererseits bietet der Filter den Vorteil, dass Angreifer aufgrund der regionalen Einschränkung einfacher identifiziert werden können. Zusätzlich profitieren Unternehmen von einem verbesserten Schutz, da sie einem geringeren Risiko für DDoS-Angriffe ausgesetzt sind.
+
+Es wird dringend empfohlen, dass Internetdienstanbieter und andere Netzwerkadministratoren den Ingress Filter an den Rändern ihrer Netzwerke implementieren, um das Problem effektiv anzugehen. Netzwerke, die auf diesen Filter verzichten, unterstützen potenzielle Angreifer und tragen somit zu der Problematik bei.
+
+\subsubsection{Erweiterung des Ingress Filters}
+Der zuvor präsentierte Filter weist einige Schwächen auf. Insbesondere kann es dazu kommen, dass der Internetverkehr blockiert wird, obwohl er legitim ist, weil zum Beispiel die Liste der IP-Prefixe nicht auf dem neuesten Stand ist. Um diesem Problem zu einzudämmen, stellen Fergusan et al. (BCP 84) \cite{Bcp84} vier Jahre später für den Filter Alternativen um ihn zu implementieren vor. Eine Alternative ist es statische Acces Controll Lists (ACLs) zu benutzen. Ein weiterer ist Strict Reverse Path Forwarding (Strict RPF). Hierbei wird die Quelladresse eines Pakets im Forwarding Information Base (FIB) überprüft. Die Überprüfung erfolgt erfolgreich, wenn das Paket über die Schnittstelle empfangen wird, die normalerweise für die Weiterleitung zum Ursprungsort des Pakets verwendet wird. BCP 38 und BCP 84 gelten als "Best Practice" \cite{Hal01}.
+
+\subsection{Aktueller Stand von SAV}
+IP-Spoofing und die daraus resultierende DdoS-Angriffe existieren bereits länger als 25 Jahre \cite{manrs01}. Obwohl vor 25 Jahren das Internet noch nicht die Relevanz wie heutzutage hat, waren die Angriffe ein Problem. Der 2000 vorgestellte „Ingress Filter“ \cite{Ingress01} und die 2004 Erweiterung des Filters \cite{BCP78} gelten aktuell immer noch als Best Practice \cite{CRP01} \cite{Lone01} \cite{Hal01} \cite{manrs01}.  
+
+\subsubsection{Spoofer Project}
+Robert Beverly et al. \cite{Spoofer01} haben 2005 den ersten Versuch unternommen, das Internet in Bezug auf SAV zu messen, und ihre Ergebnisse im sogenannten Spoofer Project vorgestellt. Im Rahmen des Projekts wurden Freiwillige gesucht, die eine Software installierten, um das Netzwerk, an das ihre Computer angeschlossen waren, auf SAV zu überprüfen. Die Software sandte regelmäßig Anfragen mit sowohl verfälschten als auch nicht verfälschten IP-Adressen an einen bestimmten Server. Dieser Server überprüfte die empfangenen Anfragen und analysierte, ob Spoofing erlaubt war. Die gewonnenen Daten wurden öffentlich im Internet zugänglich gemacht. Ein Vorteil dieser Messungen besteht darin, dass sie nicht nur Netzwerke aufdecken, die IP-Spoofing erlauben, sondern auch solche, die es nicht erlauben. Ein Nachteil des Projekts ist jedoch, dass Daten nur gewonnen werden können, wenn es Freiwillige gibt, die sie sammeln. Dadurch herrscht eine unabsichtliche Auswahlverzerrung in den Regionen von ISPs in denen es mehr Nutzer gibt. Zusätzlich sind einige ISPs unterrepräsentiert oder gar nicht vertreten in Regionen, wo das Projekt keine Bekanntheit hat. Darüber hinaus werden Netzwerke, die bewusst auf SAV verzichten, nicht freiwillig an solchen Messungen teilnehmen.
 
 \subsection{Zukunft von SAV}
 %%
