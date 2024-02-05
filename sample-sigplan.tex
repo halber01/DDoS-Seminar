@@ -110,7 +110,7 @@
 %%
 %% The "title" command has an optional parameter,
 %% allowing the author to define a "short title" to be used in page headers.
-\title{DDoS defence mechanisims }
+\title{DDoS defence mechanisims}
 
 %%
 %% The "author" command and its associated commands are used to define
@@ -137,7 +137,7 @@
 %%
 %% Keywords. The author(s) should pick words that accurately describe
 %% the work being presented. Separate the keywords with commas.
-\keywords{Source Address Validation, IP Spoofing, IXP, Scrubber, Machine Learning}
+\keywords{Source Address Validation, IP Spoofing, IXP, Scrubber, Machine Learning, DDoS}
 
 
 %%
@@ -146,25 +146,31 @@
 \maketitle
 
 \section{Introduction}
-Cyberkriminalität ist in der modernen Gesellschaft nicht mehr wegzudenken. Insbesondere die DDoS Attacken gegen Unternehmen und staatliche Institutionen haben in den letzten Jahren dramatisch zugenommen.
+Cyberkriminalität ist in der modernen Gesellschaft allgegenwärtig, insbesondere Distributed Denial of Service (DDoS)-Attacken auf Unternehmen und staatliche Institutionen haben in den letzten Jahren stark zugenommen. Bereits seit Ende des letzten Jahrhunderts sind derartige Angriffe bekannt \cite{manrs01}. Die mangelnde Authentifizierung im Internetprotokoll beim Senden von Datenpaketen ermöglicht diese Angriffe. Eine Antwort auf diese Bedrohungen wurde in den frühen 2000er Jahren mit der Einführung von Source Address Validation (SAV) präsentiert. Mit BCP 38 \cite{Ingress01} wurde der "Ingress Filter" vorgestellt. Daraufhin wurde mit BCP 84\cite{Bcp84} weitere Methoden wie ACL und RPF für den Filter vorgestellt. Diese Veröffentlichungen zielen darauf ab, IP-Spoofing zu verhindern und damit auch DDoS-Attacken entgegenzuwirken. Sie gelten heutzutage immer noch als "Best Practie" \cite{Hal01}. 
+
+SAV kann in zwei Richtungen implementiert werden: Outbound SAV (oSAV), wenn Datenverkehr das Netzwerk verlässt und Inbound SAV (iSAV), wenn Datenverkehr in ein Netzwerk gelangt. Untersuchungen zeigen jedoch, dass die Mehrheit des Internets keine umfassende SAV implementiert hat \cite{Spoofer01} \cite{CRP01}. Dies wird durch verschiedene Faktoren wie finanzielle Ressourcen, gesetzliche Rahmenbedingungen und weitere Einflüsse beeinflusst \cite{Hal01}. Eine Steigerung der Präsenz von SAV wird als notwendig erachtet, um dieser Herausforderung zu begegnen \cite{manrs01}.
+
+Der flächendeckende Einsatz von oSAV könnte DDoS-Attacken, insbesondere Reflection-Angriffe, wirksam unterbinden \cite{FrontDoor01}. Außerdem können DDoS-Angriffe auch an anderen Stellen des Internets bekämpft werden. Der IXP Scrubber \cite{Hohlfeld01} filtert schädlichen Verkehr an einem Internet Knotenpunkt.
+
+Eine umfassende Implementierung dieser Maßnahmen würde dazu beitragen, die Authentifizierungs Lücke im Protokoll zu schließen und DDoS-Angriffe vollständig zu unterdrücken.
 
 \section{IXP Scrubber}
-Zuerst wird erklärt was ein Internet Exchange Point (IXP) ist und wo er sich im Internet befindet. Danach erfolgt eine Einführung in den IXP Scrubber, wie er funktioniert und wie er es schafft schädlichen Internetverkehr zu filtern.
+Ein Internet Exchange Point (IXP) fungiert als zentraler Knotenpunkt im Internet, durch den ein erheblicher Datenverkehr fließt. Angesichts der wachsenden Menge an erzeugtem Internetverkehr gibt es weltweit viele dieser Knotenpunkte. Gleichzeitig nehmen DDoS-Angriffe weiter zu, und durch IXPs laufen diese Angriffe durch. Daher erscheint es sinnvoll, an diesen Knotenpunkten eine Art "Staubsauger" zu implementieren, der schädlichen Verkehr effektiv herausfiltert. Im Folgenden wird ein IXP und der IXP Scrubber näher betrachtet.
 
 \subsection{Internet Exchange Point}
 Das Internet besteht aus einer Vielzahl von miteinander verbundenen Netzwerken. Um diese Netzwerke effizient zu verknüpfen, werden sogenannte Internet Exchange Points (IXPs) am Rand dieser platziert. Die IXPs fungieren als zentrale Knotenpunkte im Internet und ermöglichen es, den Internetverkehr von einem Netzwerk auf ein anderes zu leiten. Praktisch betrachtet handele es sich bei IXPs um Schaltstellen, die als Bindeglieder zwischen verschiedenen Netzwerken dienen. Daraus folge, dass durch einen IXP sehr viel Internetverkehr durch laufe.
 
 Die Funktionsweise eines IXPs könne mit der eines Internet-Switches verglichen werden, wobei dieser auf der zweiten Ebene des OSI-Modells positioniert sei. Zur Kommunikation mit einem IXP verwenden Netzwerke das sogenannte Backbone-Protokoll.
 
-Ein wesentlicher Vorteil von einem IXP liege in der geringen Latenz und der kurzen Roundtrip-Zeit. Darüber hinaus ermögliche es ein IXP, den Verkehr im Falle eines Ausfalls auf alternative Routen umzuleiten, was die Robustheit des Netzwerks erhöhe. Dies trage dazu bei, dass das Netzwerk weniger anfällig für Fehler und Störungen sei. \cite{ixp00}
+Ein wesentlicher Vorteil von einem IXP liege in der geringen Latenz und der kurzen Roundtrip-Zeit. Darüber hinaus ermögliche es ein IXP, den Verkehr im Falle eines Ausfalls auf alternative Routen umzuleiten, was die Robustheit des Netzwerks erhöhe. Dies trage dazu bei, dass das Netzwerk weniger anfällig für Fehler und Störungen sei. \cite{ixp01}
 
 \subsection{IXP Scrubber}
-Der IXP Scrubber, im Folgenden als "Scrubber" bezeichnet, werde innerhalb eines Internet Exchange Points (IXP) eingesetzt. Seine Hauptaufgabe sei es, bösartigen Internetverkehr zu erkennen und herauszufiltern. Der Scrubber basiere auf einem Machine Learning System (MLS). Die primäre Motivation hinter diesem Scrubber sei die Abwehr von Distributed Denial of Service (DDoS) Attacken. DDoS Attacken seien besonders problematisch, da es Unternehmen gebe, bei denen der Kauf von Internetverkehr kostengünstig sei. Dies führe dazu, dass dieser Angriffsvektor häufig genutzt werde und das Volumen solcher Angriffe könne bis zu 3,5 Tbit/s erreichen.
+Im Jahr 2022 haben Matthias Wichtlhuber et al. \cite{Hohlfeld01} einen IXP Scrubber vorgestellt. Im Folgenden wird dieser näher betrachtet. Der IXP Scrubber, im Folgenden als "Scrubber" bezeichnet, werde innerhalb eines Internet Exchange Points (IXP) eingesetzt. Seine Hauptaufgabe sei es, bösartigen Internetverkehr zu erkennen und herauszufiltern. Der Scrubber basiere auf einem Machine Learning System (MLS). Die primäre Motivation hinter diesem Scrubber sei die Abwehr von DDoS-Attacken. DDoS Attacken seien besonders problematisch, da es Unternehmen gebe, bei denen der Kauf von Internetverkehr kostengünstig sei. Dies führe dazu, dass dieser Angriffsvektor häufig genutzt werde und das Volumen solcher Angriffe könne bis zu 3,5 Tbit/s erreichen.
 
 Das MLS des Scrubbers bestünde aus zwei Hauptschritten. Zunächst erfolge das Training des Systems, gefolgt von der eigentlichen Klassifizierung der Daten. Der Grundgedanke des Scrubbers sei es, präzise zu arbeiten und gleichzeitig die Übersichtlichkeit zu wahren. Im Anschluss werde der Scrubber evaluiert.
 
 \subsubsection{Microscopic Level}
-Um zuverlässig zu funktionieren, brauche das Machine Learning System (MLS) viele Trainingsdaten. Aus diesem Grund seien dem MLS von fünf Partner Internet Exchange Points (IXPs) in Europa und den USA Daten zur Verfügung gestellt worden, die bis zu zwei Jahre alt sein konnten. Diese Daten seien in gutartigen und bösartigen Verkehr unterteilt. Der Internetverkehr, der automatisch vom System oder von benachbarten IXPs manuell als schädlich gekennzeichnet worden sei, erhielt das Label "blackholed". Verkehr mit diesem Label sei in ein "Schwarzes Loch" geleitet worden, was dazu geführt habe, dass sie verschwanden und das Ziel nicht beeinträchtigt worden sei. Durch die Verwendung des Border Gateway Protocol (BGP) seien diese Labels an andere IXPs weitergegeben worden. \cite{blackhole00}
+Um zuverlässig zu funktionieren, brauche das Machine Learning System (MLS) viele Trainingsdaten. Aus diesem Grund seien dem MLS von fünf Partner Internet Exchange Points (IXPs) in Europa und den USA Daten zur Verfügung gestellt worden, die bis zu zwei Jahre alt sein konnten. Diese Daten seien in gutartigen und bösartigen Verkehr unterteilt. Der Internetverkehr, der automatisch vom System oder von benachbarten IXPs manuell als schädlich gekennzeichnet worden sei, erhielt das Label "blackholed". Verkehr mit diesem Label sei in ein "Schwarzes Loch" geleitet worden, was dazu geführt habe, dass sie verschwanden und das Ziel nicht beeinträchtigt worden sei. Durch die Verwendung des Border Gateway Protocol (BGP) seien diese Labels an andere IXPs weitergegeben worden. \cite{blackhole01}
 Daten, die dieses Label nicht erhalten haben, seien als gutartig eingestuft worden. Die Trainingsmenge sei aus ungefähr dem gleichen Prozentsatz aus gutartigem und bösartigem Verkehr zusammengesetzt.
 
 Auf den Trainingsdaten sei der Association Rule Mining (ARM) Algorithmus angewandt worden. ARM ist ein bekanntes Data-Mining-Verfahren, das Association-Regeln anhand der Daten in der Form A -> C lernt. Die Anwendung des Verfahrens auf den Testdaten habe 7859 Regeln ergeben. Anschließend seien alle Regeln eliminiert worden, die keinen Mehrwert hatten, weil sie eine zu geringe Konfidenz aufgewiesen hätten. Nach dieser Minimierung seien 367 Regeln übrig geblieben. Diese Anzahl sei gering genug gewesen, um es zu ermöglichen, die Regeln manuell zu überprüfen. In einem User Interface (UI) werden die Regeln angezeigt und Administratoren können zu den Regeln Kommentare hinzufügen sowie diese akzeptieren oder ablehnen.
@@ -196,15 +202,22 @@ Technisch betrachtet manipuliert der Angreifer bei IP Spoofing seine IP-Adresse,
 
 Diese Täuschungstechnik besteht bereits seit mehr als 25 Jahren und hat sich in dieser Zeit als beliebt für Anonymität und verschiedene DDoS-Angriffsvektoren wie Redirection und Amplification etabliert \cite{manrs01}.
 
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\linewidth]{iSAV_oSAV.png}
+  \caption{Angriffs Szenario bei der der Angreifer IP-Spoofing betreibt und auf dem Weg zur der Zieladresse ist kein SAV in Betrieb. Von Yevheniya Nosyk et al. (\url{https://shorturl.at/duzB8}). Page: 2591}
+  \Description{Ein Angriffs Szenario ohne SAV}
+  \label{fig:iSAV_oSAV}
+\end{figure}
+
 \subsection{Validation}
-Source Address Validation (SAV) fungiert als Schutzmaßnahme gegen IP-Spoofing. Die Hauptabsicht von SAV besteht darin, die Echtheit der Absenderadresse eines Datenpakets zu überprüfen. In der aktuellen Internetarchitektur fehlt eine Authentifizierungsoption beim Senden von Datenpaketen. Diese Sicherheitslücke ermöglicht IP-Spoofing, was wiederum zu einer Zunahme von DDoS-Angriffen führt \cite{Hal01}.
+SAV fungiert als Schutzmaßnahme gegen IP-Spoofing. Die Hauptabsicht von SAV besteht darin, die Echtheit der Absenderadresse eines Datenpakets zu überprüfen. In der aktuellen Internetarchitektur fehlt eine Authentifizierungsoption beim Senden von Datenpaketen. Diese Sicherheitslücke ermöglicht IP-Spoofing, was wiederum zu einer Zunahme von DDoS-Angriffen führt \cite{Hal01}.
 
 \subsubsection{oSAV und iSAV: Schlüsselrolle in der Netzwerksicherheit}
-Je nachdem, in welche Richtung des Internetflusses der SAV eingesetzt wird, erfüllt er unterschiedliche Funktionen und Ziele. Outbound SAV (oSAV) prüft die Echtheit der Absenderadressen, wenn Datenpakete das interne Netzwerk verlassen, während Inbound SAV (iSAV) die Absenderadressenüberprüfung für eingehende Datenpakete aus dem externen Netzwerk durchführt. Diese Unterscheidung ist entscheidend für die Implementierung von Sicherheitsmaßnahmen und die Reduzierung von Angriffsvektoren in beide Richtungen des Datenverkehrs \cite{Hal01}.
+Je nachdem, in welche Richtung des Internetflusses der SAV eingesetzt wird, erfüllt er unterschiedliche Funktionen und Ziele. Outbound SAV (oSAV) prüft die Echtheit der Absenderadressen, wenn Datenpakete das interne Netzwerk verlassen, während Inbound SAV (iSAV) die Absenderadressenüberprüfung für eingehende Datenpakete aus dem externen Netzwerk durchführt. Diese Unterscheidung ist entscheidend für die Implementierung von Sicherheitsmaßnahmen und die Reduzierung von Angriffsvektoren in beide Richtungen des Datenverkehrs \cite{Hal01}. 
+In \autoref{fig:iSAV_oSAV} ist ersichtlich, dass aufgrund von fehlendem SAV in beide Richtung der Angreifer ungestört seinen Angriff durchführen darf. Dazu wird gezeigt, wo oSAV und iSAV im Internet eingesetzt werden kann
 
-Die Nichtumsetzung von oSAV erleichtert Angreifern insbesondere die Durchführung von DDoS-Angriffen, insbesondere Reflection-Angriffen über das offene Domain Name System (DNS) oder das Network Time Protocol (NTP). Bei diesen Angriffen nutzen Angreifer öffentliche Server, um Schaden anzurichten, indem sie manipulierte IP-Adressen verwenden, um Anfragen zu senden und den Empfänger mit übermäßigen Antworten zu überlasten. Zudem erhält der „Absender“ ebenfalls Antworten aufgrund des Transmission Control Protocol (TCP) Handshake. Darüber hinaus bleibt der Angreifer aufgrund der fehlenden Identifikation unerkannt \cite{manrs01} \cite{Hal01} \cite{Ingress01}. Bei fehlendem iSAV zusammen mit neuen Attacken wie Water Torture Attack (Lou et al \cite{Lou01}) könnte zu erheblichen Konsequenzen führen.
-
-\textbf{//TODO Figure oSAV und iSAV}
+Die Nichtumsetzung von oSAV erleichtert Angreifern insbesondere die Durchführung von DDoS-Angriffen, insbesondere Reflection-Angriffen über das offene Domain Name System (DNS) oder das Network Time Protocol (NTP). Bei diesen Angriffen nutzen Angreifer öffentliche Server, um Schaden anzurichten, indem sie manipulierte IP-Adressen verwenden, um Anfragen zu senden und den Empfänger mit übermäßigen Antworten zu überlasten. Zudem erhält der „Absender“ ebenfalls Antworten aufgrund des Transmission Control Protocol (TCP) Handshake. Darüber hinaus bleibt der Angreifer aufgrund der fehlenden Identifikation unerkannt \cite{manrs01} \cite{Hal01} \cite{Ingress01}. Bei fehlendem iSAV zusammen mit neuen Attacken wie Water Torture Attack (Lou et al \cite{Lou01}) könnte es zu erheblichen Konsequenzen führen.
 
 \subsubsection{Ingress Filter}
 In den 1990er Jahren wurden die ersten DDoS-Angriffe öffentlich bekannt, die auf IP-Spoofing basierten \cite{CRP01}. Die daraus resultierende Unsicherheit und die Befürchtung, wenig dagegen unternehmen zu können, führten dazu, dass Fergusan et al. (BCP 38) \cite{Ingress01} im Jahr 2000 den sogenannten "Ingress Filter" vorstellten. Dieser sollte dazu dienen, die Auswirkungen von IP-Spoofing und den daraus resultierenden DDoS-Angriffen zu minimieren. Dieser Filter setzt voraus, dass eine Liste aller gültigen IP-Prefixe vorhanden ist. Seine Funktionsweise besteht darin, IP-Spoofing-Angriffe zu unterbinden, indem er nur den Datenverkehr passieren lässt, dessen IP-Prefix in seiner Liste aufgeführt ist. Falls der Prefix nicht aufgeführt ist, wird der Datenverkehr blockiert. Um einen erfolgreichen Angriff zu starten, muss ein Angreifer eine gültige IP-Adresse aus seinem regionalen Bereich übernehmen, um den Filter zu umgehen.
@@ -217,12 +230,34 @@ Es wird dringend empfohlen, dass Internetdienstanbieter und andere Netzwerkadmin
 Der zuvor präsentierte Filter weist einige Schwächen auf. Insbesondere kann es dazu kommen, dass der Internetverkehr blockiert wird, obwohl er legitim ist, weil zum Beispiel die Liste der IP-Prefixe nicht auf dem neuesten Stand ist. Um diesem Problem zu einzudämmen, stellen Fergusan et al. (BCP 84) \cite{Bcp84} vier Jahre später für den Filter Alternativen um ihn zu implementieren vor. Eine Alternative ist es statische Acces Controll Lists (ACLs) zu benutzen. Ein weiterer ist Strict Reverse Path Forwarding (Strict RPF). Hierbei wird die Quelladresse eines Pakets im Forwarding Information Base (FIB) überprüft. Die Überprüfung erfolgt erfolgreich, wenn das Paket über die Schnittstelle empfangen wird, die normalerweise für die Weiterleitung zum Ursprungsort des Pakets verwendet wird. BCP 38 und BCP 84 gelten als "Best Practice" \cite{Hal01}.
 
 \subsection{Aktueller Stand von SAV}
-IP-Spoofing und die daraus resultierende DdoS-Angriffe existieren bereits länger als 25 Jahre \cite{manrs01}. Obwohl vor 25 Jahren das Internet noch nicht die Relevanz wie heutzutage hat, waren die Angriffe ein Problem. Der 2000 vorgestellte „Ingress Filter“ \cite{Ingress01} und die 2004 Erweiterung des Filters \cite{BCP78} gelten aktuell immer noch als Best Practice \cite{CRP01} \cite{Lone01} \cite{Hal01} \cite{manrs01}.  
+IP-Spoofing und die daraus resultierende DdoS-Angriffe existieren bereits länger als 25 Jahre \cite{manrs01}. Obwohl vor 25 Jahren das Internet noch nicht die Relevanz wie heutzutage hat, waren die Angriffe ein Problem. Der 2000 vorgestellte „Ingress Filter“ \cite{Ingress01} und die 2004 Erweiterung des Filters \cite{Bcp84} gelten aktuell immer noch als Best Practice \cite{CRP01} \cite{Lone01} \cite{Hal01} \cite{manrs01}.  
 
 \subsubsection{Spoofer Project}
 Robert Beverly et al. \cite{Spoofer01} haben 2005 den ersten Versuch unternommen, das Internet in Bezug auf SAV zu messen, und ihre Ergebnisse im sogenannten Spoofer Project vorgestellt. Im Rahmen des Projekts wurden Freiwillige gesucht, die eine Software installierten, um das Netzwerk, an das ihre Computer angeschlossen waren, auf SAV zu überprüfen. Die Software sandte regelmäßig Anfragen mit sowohl verfälschten als auch nicht verfälschten IP-Adressen an einen bestimmten Server. Dieser Server überprüfte die empfangenen Anfragen und analysierte, ob Spoofing erlaubt war. Die gewonnenen Daten wurden öffentlich im Internet zugänglich gemacht. Ein Vorteil dieser Messungen besteht darin, dass sie nicht nur Netzwerke aufdecken, die IP-Spoofing erlauben, sondern auch solche, die es nicht erlauben. Ein Nachteil des Projekts ist jedoch, dass Daten nur gewonnen werden können, wenn es Freiwillige gibt, die sie sammeln. Dadurch herrscht eine unabsichtliche Auswahlverzerrung in den Regionen von ISPs in denen es mehr Nutzer gibt. Zusätzlich sind einige ISPs unterrepräsentiert oder gar nicht vertreten in Regionen, wo das Projekt keine Bekanntheit hat. Darüber hinaus werden Netzwerke, die bewusst auf SAV verzichten, nicht freiwillig an solchen Messungen teilnehmen.
 
+\subsubsection{The Closed Resolver Project}
+In einer aktuellen Studie von Yevheniya Nosyk et al. aus dem Jahr 2023 \cite{CRP01} wurde das Internet erneut hinsichtlich SAV gemessen. Das Hauptziel dieser Messung bestand darin, den Einsatz von iSAV zu überprüfen. Während in der Vergangenheit viele Studien den Einsatz von oSAV gemessen haben, wurde die andere Richtung bisher nur selten untersucht. Die Messmethode ähnelte dabei dem Spoofer Project. Die Studie umfasste sowohl IPv4- als auch IPv6-Messungen. //TODO . Zudem wurden aktuelle Daten aus dem Spoofer Project herangezogen. Die Ergebnisse zeigen, dass die Mehrheit der AS kein iSAV implementiert hat. Des Weiteren wurde die geografische Verteilung der AS berücksichtigt, wobei festgestellt wurde, dass China über ein sehr umfangreiches DNS-Resolver-Netz im IPv4 verfügt, wovon jedoch ein Achtel keine oder fehlerhafte iSAV-Implementierungen aufweist. Im IPv6 hat die USA das größte DNS-Netz mit 260.047 Resolvern, von denen 1319 anfällig für IP-Spoofing sind. Kleinere Länder wie der Kosovo zeigen prozentual eine besonders hohe Anfälligkeit für IP-Spoofing.
+
+\subsubsection{Verbreitung von SAV}
+
+Die Erkenntnisse aus beiden Projekten zeichnen ein wenig ermutigendes Bild für Internetnutzer. Ein Großteil der Internetinfrastruktur implementiert keine umfassende SAV. Diese Situation führt zu einem anhaltenden Anstieg von DDoS-Angriffen \cite{CRP01}. SAV steht vor mehreren Herausforderungen, die seine weitreichende Implementierung behindern. 
+Ein wesentlicher Wirtschaftsreiz fehlt, da der Einsatz von SAV keinen direkten finanziellen Gewinn für die implementierende Organisatzion bringt, weil das Einsetzen von SAV verhindert im Vorhinein DdoS-Attacken. Die Vorteile, die durch oSAV entstehen sind indirekter Natur, da sie verdächtigen Verkehr am Anfang filtern und benachbarte Netzwerke nicht mehr sich damit auseinandersetzen müssen. Dadurch schützt man andere, anstatt das eigene Netzwerk \cite{CRP01}.
+
+Ein weiterer Faktor, der die Verbreitung von SAV einschränkt, ist der Kostenaspekt. Die Implementierung und Aufrechterhaltung von SAV-Maßnahmen erfordert kontinuierliche Aktualisierungen und Wartung, um die Effektivität zu gewährleisten \cite{Lone01}. Zudem benötigten Unternehmen nicht nur Software, sondern auch Rechenleistung um das umzusetzen. Dieser Prozess ist nicht nur zeit- und ressourcenintensiv, sondern auch kostspielig. Unternehmen könnten aufgrund dieser finanziellen Belastung zögern, SAV in ihren Netzwerken zu implementieren.
+
+Neben den finanziellen Überlegungen hemmt die Sorge vor übermäßigem Filtern die Verbreitung von SAV. Kein Netzwerk strebt danach, legitimen Verkehr aus dem Internet zu blockieren \cite{FrontDoor01}.
+
+Ein entscheidender Faktor, der die Verbreitung von SAV weiter hemmt, ist das Fehlen von Anreizen und Regularien. Unternehmen und Netzwerkbetreiber sehen möglicherweise keine klaren Belohnungen und Vorgaben für den Einsatz von SAV-Maßnahmen. Da es keinen unmittelbaren Bonus für die Implementierung gibt, könnte die Motivation, SAV einzusetzen, gering sein. Ein weiterer Aspekt ist das Fehlen von Sanktionen für den Nicht-Einsatz von SAV. Ohne klare Strafen oder negative Auswirkungen für Unternehmen, die auf SAV verzichten, fehlt ein Anreiz, diese Sicherheitsmaßnahmen zu implementieren \cite{Lone01}.
+
+Es existiert eine weltweite Initiative namens "Mutually Agreed Norms for Routing Security" (MANRS), die sich zum Ziel gesetzt hat, Lösungen für die gängigsten Bedrohungen im Internetverkehr bereitzustellen. Im Rahmen dieser Initiative werden unterschiedliche Programme für Netzwerkadministratoren angeboten. Ein weiteres Ziel besteht darin, der SAV eine größere Reichweite zu verschaffen, um die Implementierung von SAV in mehr  Netzwerken zu fördern \cite{manrs01}. Ebenfalls bieten sie eine Anleitung \cite{anti-spoofing01} an wie man gegen Spoofing vorgehen kann.
+
 \subsection{Zukunft von SAV}
+
+Die Internet Engineering Task Force (IETF) ist eine Initiative, die sich zur Aufgabe gemacht hat das Internet zu verbessern indem sie neue Internetstandards und Best Practices, die die Funktionweise des Internets verbessern sollen, entwickeln.
+
+Eine Arbeitsgruppe mit dem Namen Source Address Validation in Intra-domain and Inter-domain Networks (SAVNET) hat sich am 08. November 2023 in Prag zum 118. Treffen der IEFT getroffen um neue Internetstandards zu präsentieren. 
+Jianping Wu et al. \cite{SAV_requirements01} haben Anforderungen an neue SAV Methoden präsentiert. SAV Architecture (SAVA) (RFC5210) teilt ein Netzwerk in 3 Stufen auf: acces, intra-domain und inter-domain. Der Vorteil dieser Architektur ist es, dass wenn SAV nicht vollständig implementiert ist, kann SAVA ablöse für das Problem sein. Dadurch ist das Internet sicherer vor DdoS-Angriffen. Inter-domain SAV (idSAV) wird in der Regel in AS betrieben. Ein Vorteil von idSAV ist es, dass verschiedene Ases keine Kommunikation brauchen um effektiv zu filtern.  BCP 38 und BCP 84 sind gängige Methoden von idSAV, aber diese weisen einige Schwierigkeiten auf. 
+
 %%
 %% The next two lines define the bibliography style to be used, and
 %% the bibliography file.https://de.overleaf.com/project/65760e8888e47700886539c8
@@ -232,17 +267,6 @@ Robert Beverly et al. \cite{Spoofer01} haben 2005 den ersten Versuch unternommen
 %%
 %% If your work has an appendix, this is the place to put it.
 \appendix
-
-\section{Research Methods}
-
-\subsection{Part One}
-
-TBD
-
-
-\section{Online Resources}
-
-TBD
 
 \end{document}
 \endinput
